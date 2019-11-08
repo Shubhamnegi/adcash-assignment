@@ -19,32 +19,68 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-    // /**
-    //  * @return Order[] Returns an array of Order objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     *
+     * @param $userId
+     * @param $limit
+     * @param $skip
+     * @return Order[]
+     */
+    public function findOrderByUser($userId, $limit, $skip)
     {
         return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('o.user_id = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('o.create_at', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult($skip)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Order
+    /**
+     * @param $productId
+     * @param $limit
+     * @param $skip
+     * @return Order[]
+     */
+    public function findOrderByProductId($productId, $limit, $skip)
     {
         return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('o.product_id = :productId')
+            ->setParameter('productId', $productId)
+            ->orderBy('o.create_at', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult($skip)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
+
+    /**
+     * @param $userId
+     * @param $productId
+     * @param $quantity
+     * @param $total
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function createOrder($userId, $productId, $quantity, $total)
+    {
+        $em = $this->getEntityManager(); // entity manager
+
+        $current = new \DateTime(); // current time
+
+        $order = new Order();
+        $order->setCreatedAt($current);
+        $order->setProductId($productId);
+        $order->setUserId($userId);
+        $order->setQuantity($quantity);
+        $order->setTotal($total);
+
+        $em->persist($order);
+        $em->flush();
+
+    }
+
+
 }
