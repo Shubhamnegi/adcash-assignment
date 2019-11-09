@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSharedModule } from './mat-shared/mat-shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AddOrderComponent } from './dialog/add-order/add-order.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { AddOrderComponent } from './dialog/add-order/add-order.component';
     BrowserModule,
     BrowserAnimationsModule,
     MatSharedModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   entryComponents: [AddOrderComponent],
   providers: [],

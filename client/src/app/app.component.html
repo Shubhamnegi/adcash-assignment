@@ -14,65 +14,86 @@
   <mat-icon aria-hidden="false" aria-label="search">add</mat-icon>
 </button>
 
-<div class="flex-container" color="primary" style="padding:20px">
-  <!-- Duration -->
-  <mat-form-field
-    class="mlr-10"
-    data-step="2"
-    data-intro="Filter by duration"
-    data-position="top"
-  >
-    <mat-label>Duration</mat-label>
-    <mat-select>
-      <mat-option *ngFor="let item of durationList" [value]="item.key">
-        {{ item.value }}</mat-option
-      >
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Search Type -->
-  <mat-form-field
-    class="mlr-10"
-    data-step="3"
-    data-intro="Filter by user/product"
-    data-position="top"
-  >
-    <mat-label>Search type</mat-label>
-    <mat-select>
-      <mat-option *ngFor="let item of listTypes" [value]="item.key">
-        {{ item.value }}</mat-option
-      >
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Search Term -->
-  <mat-form-field
-    class="mlr-10"
-    style="width: 300px;"
-    data-step="4"
-    data-intro="Filter by name of user/product"
-    data-position="top"
-  >
-    <input matInput placeholder="Search Term" />
-  </mat-form-field>
-
-  <!-- Search Button -->
-  <div>
-    <button
-      type="button"
-      mat-button
-      mat-raised-button
-      color="primary"
-      style="margin-top: 10px;width:200px"
-      data-step="5"
-      data-intro="Start your search"
+<form
+  novalidate
+  autocomplete="off"
+  [formGroup]="searchForm"
+  (submit)="submitSearch()"
+>
+  <div class="flex-container" color="primary" style="padding:20px">
+    <!-- Duration -->
+    <mat-form-field
+      class="mlr-10"
+      data-step="2"
+      data-intro="Filter by duration"
       data-position="top"
     >
-      <mat-icon aria-hidden="false" aria-label="search">search</mat-icon>
-      Search
-    </button>
+      <mat-label>Duration</mat-label>
+      <mat-select formControlName="duration">
+        <mat-option *ngFor="let item of durationList" [value]="item.key">
+          {{ item.value }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Search Type -->
+    <mat-form-field
+      class="mlr-10"
+      data-step="3"
+      data-intro="Filter by user/product"
+      data-position="top"
+    >
+      <mat-label>Search type</mat-label>
+      <mat-select formControlName="getby">
+        <mat-option *ngFor="let item of listTypes" [value]="item.key">
+          {{ item.value }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Search Term -->
+    <mat-form-field
+      class="mlr-10"
+      style="width: 300px;"
+      data-step="4"
+      data-intro="Filter by name of user/product"
+      data-position="top"
+    >
+      <input matInput placeholder="Search Term" formControlName="name" />
+    </mat-form-field>
+
+    <!-- Search Button -->
+    <div>
+      <button
+        type="submit"
+        mat-button
+        mat-raised-button
+        color="primary"
+        style="margin-top: 10px;width:200px"
+        data-step="5"
+        data-intro="Start your search"
+        data-position="top"
+        [disabled]="!searchForm.valid"
+      >
+        <mat-icon aria-hidden="false" aria-label="search">search</mat-icon>
+        Search
+      </button>
+    </div>
+    <div>
+      <button
+        type="button"
+        mat-button
+        mat-raised-button
+        color="warn"
+        style="margin-left:10px;margin-top: 10px;width:150px"
+        (click)="resetSearch()"
+      >
+        <mat-icon aria-hidden="false" aria-label="search">refresh</mat-icon>
+        Reset
+      </button>
+    </div>
   </div>
-</div>
+</form>
 
 <table mat-table [dataSource]="datasource" class="w-100">
   <ng-container matColumnDef="user_name">

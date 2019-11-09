@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import * as introJs from 'intro.js/intro.js';
 import { MatDialog } from '@angular/material/dialog';
 import { AddOrderComponent } from './dialog/add-order/add-order.component';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 
 @Component({
@@ -20,15 +21,30 @@ export class AppComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['user_name', 'product_name', 'quantity', 'total', 'created_at', 'actions'];
   datasource = new MatTableDataSource<OrderInterface>();
 
-  listType = 'user';
-  searchName = '';
 
-  durationList = [{ key: 1, value: 'Today' }, { key: 7, value: '7 days' }, { key: null, value: 'All days' }];
+
+  durationList = [{ key: 1, value: 'Today' }, { key: 7, value: '7 days' }, { key: 0, value: 'All days' }];
   listTypes = [{ key: 'user', value: 'User' }, { key: 'product', value: 'Product' }];
 
-  constructor(private orderService: OrderService, private matSnackBar: MatSnackBar, public dialog: MatDialog) {
+  currentSearchOptions = {
+    duration: 1,
+    getby: 'user',
+    name: ''
+  };
 
+  limit = 10;
+  skip = 0;
+
+  searchForm: FormGroup;
+
+  constructor(private orderService: OrderService, private matSnackBar: MatSnackBar, public dialog: MatDialog) {
+    this.searchForm = new FormGroup({
+      duration: new FormControl(this.currentSearchOptions.duration, [Validators.required]),
+      getby: new FormControl(this.currentSearchOptions.getby, [Validators.required]),
+      name: new FormControl(this.currentSearchOptions.name)
+    });
   }
+
 
   ngOnInit(): void {
     this.listOrders();
@@ -37,14 +53,47 @@ export class AppComponent implements OnInit, AfterViewInit {
     // introJs().start();
   }
 
+  submitSearch() {
+    this.currentSearchOptions = this.searchForm.value;
+    this.listOrders();
+  }
+  
+  resetSearch() {
+    this.skip = 0;
+    this.currentSearchOptions = {
+      duration: 1,
+      getby: 'user',
+      name: ''
+    };
+    this.searchForm.patchValue(this.currentSearchOptions);
+    this.listOrders();
+  }
+
+  editOrder() {
+    this.openDialog('edit');
+  }
   addOrder() {
+    this.openDialog('create');
+  }
+
+  openDialog(type, id = null) {
     const ref = this.dialog.open(AddOrderComponent, {
-      width: '350px'
+      width: '350px',
+      data: {
+        type: type,
+        id: id
+      }
+    });
+    ref.afterClosed().subscribe(result => {
+      console.log('result on close', result);
+      if (result) {
+        this.resetSearch();
+      }
     });
   }
 
   listOrders() {
-    this.orderService.listOrders(this.listType, this.searchName)
+    this.orderService.listOrders(this.currentSearchOptions.getby, this.currentSearchOptions.name)
       .then((data: CustomResponse<OrderInterface>) => {
         console.log(data.body, 'response');
         this.datasource.data = data.body;

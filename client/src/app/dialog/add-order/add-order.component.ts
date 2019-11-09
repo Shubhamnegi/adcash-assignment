@@ -6,6 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomResponse } from 'src/interface/CustomResponse';
 import { UserInterface } from '../../../interface/UserInterface';
 import { ProductInterface } from 'src/interface/ProductInterface';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { OrderService } from 'src/app/service/order.service';
 
 @Component({
   selector: 'app-add-order',
@@ -13,15 +15,42 @@ import { ProductInterface } from 'src/interface/ProductInterface';
   styleUrls: ['./add-order.component.scss']
 })
 export class AddOrderComponent implements OnInit {
-
+  type = 'create';
+  id = null;
   users: UserInterface[] = [];
   products: ProductInterface[] = [];
+
+  orderForm: FormGroup = null;
   constructor(public dialogRef: MatDialogRef<AddOrderComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any, private productService: ProductService,
-    private userService: UserService, private matSnackBar: MatSnackBar) { }
+    @Inject(MAT_DIALOG_DATA) public data: { type: string, id: number },
+    private orderService: OrderService, private productService: ProductService,
+    private userService: UserService, private matSnackBar: MatSnackBar) {
+    
+    this.type = data.type;
+    this.id = data.id;
+
+    this.orderForm = new FormGroup({
+      userId: new FormControl('', [Validators.required]),
+      productId: new FormControl('', [Validators.required]),
+      quantity: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(100)])
+    });
+  }
 
   ngOnInit() {
     this.getUsersAndProducts();
+  }
+
+  submit() {
+    const values = this.orderForm.value;
+    console.log(values, 'values');
+    this.orderService.createOrder(values)
+      .then((data: CustomResponse<boolean>) => {
+        this.dialogRef.close(true);
+      })
+      .catch((error) => {
+        console.log(error, '[submit]');
+        this.matSnackBar.open('Error occured', null, { duration: 3000 });
+      });
   }
 
   getUsersAndProducts() {
@@ -39,7 +68,7 @@ export class AddOrderComponent implements OnInit {
       })
       .catch(error => {
         console.log('getUsersAndProducts', error);
-        this.matSnackBar.open('Error fetching form data');
+        this.matSnackBar.open('Error fetching form data', null, { duration: 3000 });
       });
   }
 

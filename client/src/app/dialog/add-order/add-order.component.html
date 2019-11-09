@@ -1,26 +1,33 @@
-<mat-dialog-content class="mat-typography">
-  <mat-form-field class="w-100">
-    <mat-label>User</mat-label>
-    <mat-select>
-      <mat-option *ngFor="let user of users" [value]="user.id">
-        {{ user.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="w-100">
-    <mat-label>Product</mat-label>
-    <mat-select>
-      <mat-option *ngFor="let user of products" [value]="user.id">
-        {{ user.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="w-100">
-    <input type="number" matInput placeholder="Quantity" />
-  </mat-form-field>
-</mat-dialog-content>
+<form novalidate autocomplete="off" (submit)="submit()" [formGroup]="orderForm">
+  <mat-dialog-content class="mat-typography">
+    <mat-form-field class="w-100">
+      <mat-label>User</mat-label>
+      <mat-select formControlName="userId">
+        <mat-option *ngFor="let user of users" [value]="user.id">
+          {{ user.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-100">
+      <mat-label>Product</mat-label>
+      <mat-select formControlName="productId">
+        <mat-option *ngFor="let user of products" [value]="user.id">
+          {{ user.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-100">
+      <input
+        type="number"
+        matInput
+        placeholder="Quantity"
+        formControlName="quantity"
+      />
+    </mat-form-field>
+  </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button cdkFocusInitial>Add</button>
-</mat-dialog-actions>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close type="button">Cancel</button>
+    <button mat-button cdkFocusInitial type="submit" color="primary" [disabled]="!orderForm.valid">Add</button>
+  </mat-dialog-actions>
+</form>
