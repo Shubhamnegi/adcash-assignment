@@ -15,12 +15,13 @@ export class OrderService {
     this.headers = headers;
   }
 
-  listOrders(type, name) {
+  listOrders(type, name, limit, skip) {
     return this.httpclient.get(`${this.baseUrl}${APPLICATION_CONSTANTS.GET_ORDERS}`, {
       headers: this.headers,
       params: {
         'getby': type,
-        'name': name
+        'name': name,
+        limit, skip
       }
     }).toPromise();
   }

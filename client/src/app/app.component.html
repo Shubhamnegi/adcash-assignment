@@ -151,8 +151,9 @@
   data-step="6"
   data-intro="Paginate through data"
   data-position="top"
-  [length]="100"
-  [pageSize]="10"
+  [length]="totalRecords"
+  [pageSize]="limit"
   [pageSizeOptions]="[5, 10, 25, 100]"
+  
 >
 </mat-paginator>

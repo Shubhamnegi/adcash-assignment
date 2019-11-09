@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrderInterface } from 'src/interface/OrderInterface';
 import { OrderService } from './service/order.service';
@@ -9,6 +9,7 @@ import * as introJs from 'intro.js/intro.js';
 import { MatDialog } from '@angular/material/dialog';
 import { AddOrderComponent } from './dialog/add-order/add-order.component';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
@@ -32,10 +33,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     name: ''
   };
 
+  totalRecords = null;
+
   limit = 10;
   skip = 0;
 
   searchForm: FormGroup;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
 
   constructor(private orderService: OrderService, private matSnackBar: MatSnackBar, public dialog: MatDialog) {
     this.searchForm = new FormGroup({
@@ -48,6 +53,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.listOrders();
+    this.paginator.page.subscribe((event) => {
+      this.limit = event.pageSize;
+      this.skip = event.pageSize * (event.pageIndex);
+      this.listOrders();
+    })
   }
   ngAfterViewInit(): void {
     // introJs().start();
@@ -93,10 +103,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   listOrders() {
-    this.orderService.listOrders(this.currentSearchOptions.getby, this.currentSearchOptions.name)
+    this.orderService.listOrders(this.currentSearchOptions.getby, this.currentSearchOptions.name, this.limit, this.skip)
       .then((data: CustomResponse<OrderInterface[]>) => {
         console.log(data.body, 'response');
         this.datasource.data = data.body;
+        this.totalRecords = data.count;
       })
       .catch(error => {
         console.log('[listOrders]', error);
