@@ -1,13 +1,13 @@
 <mat-toolbar color="primary" class="headline main-headline">
   <span style="margin:0 auto;">Adcash assignment</span>
 </mat-toolbar>
-<button mat-fab color="accent" class="fixed-fab">
+<button mat-fab color="accent" class="fixed-fab" data-step="1" data-intro="To add new order" data-position='left'>
   <mat-icon aria-hidden="false" aria-label="search">add</mat-icon>
 </button>
 
 <div class="flex-container" color="primary" style="padding:20px">
   <!-- Duration -->
-  <mat-form-field class="mlr-10">
+  <mat-form-field class="mlr-10" data-step="2" data-intro="Filter by duration" data-position='top'>
     <mat-label>Duration</mat-label>
     <mat-select>
       <mat-option>Today</mat-option>
@@ -17,7 +17,7 @@
   </mat-form-field>
 
   <!-- Search Type -->
-  <mat-form-field class="mlr-10">
+  <mat-form-field class="mlr-10" data-step="3" data-intro="Filter by user/product" data-position='top'>
     <mat-label>Search type</mat-label>
     <mat-select>
       <mat-option>User</mat-option>
@@ -26,18 +26,19 @@
   </mat-form-field>
 
   <!-- Search Term -->
-  <mat-form-field class="mlr-10" style="width: 300px;">
+  <mat-form-field class="mlr-10" style="width: 300px;" data-step="4" data-intro="Filter by name of user/product" data-position='top'>
     <input matInput placeholder="Search Term" />
   </mat-form-field>
 
   <!-- Search Button -->
   <div>
-    <button
+    <button 
       type="button"
       mat-button
       mat-raised-button
       color="primary"
       style="margin-top: 10px;width:200px"
+      data-step="5" data-intro="Start your search" data-position='top'
     >
       <mat-icon aria-hidden="false" aria-label="search">search</mat-icon>
       Search
@@ -81,6 +82,7 @@
 </table>
 
 <mat-paginator
+  data-step="6" data-intro="Paginate through data" data-position='top'
   [length]="100"
   [pageSize]="10"
   [pageSizeOptions]="[5, 10, 25, 100]"
