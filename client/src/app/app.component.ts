@@ -60,7 +60,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     })
   }
   ngAfterViewInit(): void {
-    // introJs().start();
+    introJs().start();
   }
 
   submitSearch() {
