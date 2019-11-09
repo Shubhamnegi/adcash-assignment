@@ -13,6 +13,12 @@ order_list:
   controller: App\Controller\OrderController::listOrdersByName
   methods: [GET,OPTIONS]
 
+order_by_id:
+  path: /api/order/{id}
+  controller: App\Controller\OrderController::orderById
+  methods: [GET,OPTIONS]
+
+
 order_create:
   path: /api/order/
   controller: App\Controller\OrderController::createOrder

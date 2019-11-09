@@ -29,6 +29,23 @@ class OrderService
     }
 
     /**
+     * @param $orderId
+     * @return Order|Object
+     */
+    public function getOrderByOrderId($orderId)
+    {
+        if (!isset($orderId)) {
+            throw new BadRequestHttpException("missing order id");
+        }
+        $em = $this->em->getRepository(Order::class);
+        $order = $em->find($orderId);
+        if (!$order) {
+            throw  new BadRequestHttpException("Invalid order id");
+        }
+        return $order;
+    }
+
+    /**
      * @param $getBy string To get order by user or product
      * @param $id
      * @param int $limit

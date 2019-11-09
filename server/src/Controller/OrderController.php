@@ -28,6 +28,13 @@ class OrderController
         $this->logger = $logger;
     }
 
+    public function orderById($id)
+    {
+        $order = $this->orderService->getOrderByOrderId($id);
+        $response = new CustomResponse(JsonHelper::toJson($order));
+        return new JsonResponse($response, 200);
+    }
+
     public function createOrder(Request $request)
     {
         $userId = $request->request->get("userId");
