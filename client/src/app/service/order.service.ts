@@ -25,6 +25,14 @@ export class OrderService {
     }).toPromise();
   }
 
+  getOrderById(id) {
+    return this.httpclient.get(`${this.baseUrl}${APPLICATION_CONSTANTS.GET_ORDERS}${id}`, {
+      headers: this.headers,
+      params: {
+      }
+    }).toPromise();
+  }
+
   createOrder(data) {
     return this.httpclient.post(`${this.baseUrl}${APPLICATION_CONSTANTS.GET_ORDERS}`, data, {
       headers: this.headers,

@@ -57,7 +57,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.currentSearchOptions = this.searchForm.value;
     this.listOrders();
   }
-  
+
   resetSearch() {
     this.skip = 0;
     this.currentSearchOptions = {
@@ -69,8 +69,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.listOrders();
   }
 
-  editOrder() {
-    this.openDialog('edit');
+  editOrder(id) {
+    this.openDialog('edit', id);
   }
   addOrder() {
     this.openDialog('create');
@@ -94,7 +94,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   listOrders() {
     this.orderService.listOrders(this.currentSearchOptions.getby, this.currentSearchOptions.name)
-      .then((data: CustomResponse<OrderInterface>) => {
+      .then((data: CustomResponse<OrderInterface[]>) => {
         console.log(data.body, 'response');
         this.datasource.data = data.body;
       })

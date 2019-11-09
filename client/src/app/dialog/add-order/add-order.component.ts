@@ -8,6 +8,7 @@ import { UserInterface } from '../../../interface/UserInterface';
 import { ProductInterface } from 'src/interface/ProductInterface';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { OrderService } from 'src/app/service/order.service';
+import { OrderInterface } from 'src/interface/OrderInterface';
 
 @Component({
   selector: 'app-add-order',
@@ -25,20 +26,28 @@ export class AddOrderComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { type: string, id: number },
     private orderService: OrderService, private productService: ProductService,
     private userService: UserService, private matSnackBar: MatSnackBar) {
-    
-    this.type = data.type;
-    this.id = data.id;
 
     this.orderForm = new FormGroup({
+      id: new FormControl(null),
       userId: new FormControl('', [Validators.required]),
       productId: new FormControl('', [Validators.required]),
       quantity: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(100)])
     });
+
+    this.type = data.type;
+    this.id = data.id;
+
+    this.orderForm.patchValue({ id: this.id });
+
   }
 
   ngOnInit() {
     this.getUsersAndProducts();
+    if (this.type === 'edit') {
+      this.getOrderById();
+    }
   }
+
 
   submit() {
     const values = this.orderForm.value;
@@ -53,6 +62,21 @@ export class AddOrderComponent implements OnInit {
       });
   }
 
+  getOrderById() {
+    this.orderService.getOrderById(this.id)
+      .then((data: CustomResponse<OrderInterface>) => {
+        this.orderForm.patchValue({
+          userId: data.body.user.id,
+          productId: data.body.product.id,
+          quantity: data.body.quantity
+        });
+      })
+      .catch((error) => {
+        console.log(error, '[getOrderById]');
+        this.matSnackBar.open('Error occured fetching order', null, { duration: 3000 });
+      });
+  }
+
   getUsersAndProducts() {
     Promise.all([
       this.userService.listUsers(),
@@ -60,8 +84,8 @@ export class AddOrderComponent implements OnInit {
     ])
       .then((data: any[]) => {
         console.log(data, 'Response for user and product list');
-        const userResp: CustomResponse<UserInterface> = data[0];
-        const productResp: CustomResponse<ProductInterface> = data[1];
+        const userResp: CustomResponse<UserInterface[]> = data[0];
+        const productResp: CustomResponse<ProductInterface[]> = data[1];
         this.users = userResp.body;
         this.products = productResp.body;
 
