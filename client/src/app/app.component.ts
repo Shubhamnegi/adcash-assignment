@@ -6,6 +6,8 @@ import { CustomResponse } from 'src/interface/CustomResponse';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as introJs from 'intro.js/intro.js';
+import { MatDialog } from '@angular/material/dialog';
+import { AddOrderComponent } from './dialog/add-order/add-order.component';
 
 
 @Component({
@@ -21,7 +23,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   listType = 'user';
   searchName = '';
 
-  constructor(private orderService: OrderService, private matSnackBar: MatSnackBar) {
+  durationList = [{ key: 1, value: 'Today' }, { key: 7, value: '7 days' }, { key: null, value: 'All days' }];
+  listTypes = [{ key: 'user', value: 'User' }, { key: 'product', value: 'Product' }];
+
+  constructor(private orderService: OrderService, private matSnackBar: MatSnackBar, public dialog: MatDialog) {
 
   }
 
@@ -29,7 +34,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.listOrders();
   }
   ngAfterViewInit(): void {
-    introJs().start();
+    // introJs().start();
+  }
+
+  addOrder() {
+    const ref = this.dialog.open(AddOrderComponent, {
+      width: '350px'
+    });
   }
 
   listOrders() {

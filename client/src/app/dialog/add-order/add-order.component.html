@@ -1,0 +1,26 @@
+<mat-dialog-content class="mat-typography">
+  <mat-form-field class="w-100">
+    <mat-label>User</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let user of users" [value]="user.id">
+        {{ user.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="w-100">
+    <mat-label>Product</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let user of products" [value]="user.id">
+        {{ user.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="w-100">
+    <input type="number" matInput placeholder="Quantity" />
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button cdkFocusInitial>Add</button>
+</mat-dialog-actions>
