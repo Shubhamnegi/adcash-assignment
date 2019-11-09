@@ -96,6 +96,25 @@ class OrderService
         return $orders;
     }
 
+    public function countOrderByName($getBy, $name = "")
+    {
+        if (!isset($name)) {
+            throw  new BadRequestHttpException("missing parameter name");
+        }
+        $em = $this->em->getRepository(Order::class);
+
+        if ($getBy == "user") {
+            $result = $em->countOrderByUserName($name);
+        } elseif ($getBy == "product") {
+            $result = $em->countOrderByProductName($name);
+        } else {
+            throw  new BadRequestHttpException("Invalid parameter");
+        }
+
+        return $result;
+    }
+
+
     /**
      * @param $userId
      * @param $productId

@@ -68,6 +68,25 @@ class OrderRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $name
+     * @return mixed
+     */
+    public function countOrderByUserName($name)
+    {
+        $result = $this
+            ->createQueryBuilder('o')
+            ->select("count(o.id) as total")
+            ->innerJoin("o.user", "u")
+            ->innerJoin("o.product", "p")
+            ->andWhere('u.name like :name')
+            ->setParameter('name', $name . "%")
+            ->orderBy('o.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+        return $result[0]['total'];
+    }
+
+    /**
      * @param $productId
      * @param $limit
      * @param $skip
@@ -112,6 +131,25 @@ class OrderRepository extends ServiceEntityRepository
             ->setFirstResult($skip)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function countOrderByProductName($name)
+    {
+        $result = $this
+            ->createQueryBuilder('o')
+            ->select("count(o.id) as total")
+            ->innerJoin("o.user", "u")
+            ->innerJoin("o.product", "p")
+            ->andWhere('p.name like :name')
+            ->setParameter('name', $name . "%")
+            ->orderBy('o.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+        return $result[0]['total'];
     }
 
     /**

@@ -18,6 +18,6 @@ class CustomResponse
     {
         $this->body = $body;
         $this->message = $message;
-        $this->count = $count;
+        $this->count = (int) $count;
     }
 }

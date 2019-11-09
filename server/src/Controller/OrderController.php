@@ -53,7 +53,8 @@ class OrderController
         $name = $request->get('name');
 
         $order = $this->orderService->listOrdersByName($getBy, $name);
-        $response = new CustomResponse(JsonHelper::toJson($order), "Result for " . $getBy);
+        $count = $this->orderService->countOrderByName($getBy,$name);
+        $response = new CustomResponse(JsonHelper::toJson($order), "Result for " . $getBy, $count);
         return new JsonResponse($response, 200);
     }
 }
