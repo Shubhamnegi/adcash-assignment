@@ -26,12 +26,12 @@ class OrderRepository extends ServiceEntityRepository
      * @param $skip
      * @return Order[]
      */
-    public function findOrderByUser($userId, $limit, $skip)
+    public function findOrderByUserId($userId, $limit, $skip)
     {
         return $this->createQueryBuilder('o')
             ->andWhere('o.user_id = :userId')
             ->setParameter('userId', $userId)
-            ->orderBy('o.create_at', 'DESC')
+            ->orderBy('o.created_at', 'DESC')
             ->setMaxResults($limit)
             ->setFirstResult($skip)
             ->getQuery()
@@ -49,7 +49,7 @@ class OrderRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
             ->andWhere('o.product_id = :productId')
             ->setParameter('productId', $productId)
-            ->orderBy('o.create_at', 'DESC')
+            ->orderBy('o.created_at', 'DESC')
             ->setMaxResults($limit)
             ->setFirstResult($skip)
             ->getQuery()
