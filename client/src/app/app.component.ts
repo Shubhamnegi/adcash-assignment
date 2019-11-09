@@ -54,6 +54,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.listOrders();
     this.paginator.page.subscribe((event) => {
+      console.log("caught page event");
       this.limit = event.pageSize;
       this.skip = event.pageSize * (event.pageIndex);
       this.listOrders();
@@ -76,7 +77,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       name: ''
     };
     this.searchForm.patchValue(this.currentSearchOptions);
-    this.listOrders();
+    this.paginator.page.emit({
+      length: this.totalRecords,
+      pageIndex: 0,
+      pageSize: this.limit,
+      previousPageIndex: 1
+    })
   }
 
   editOrder(id) {
