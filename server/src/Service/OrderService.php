@@ -120,11 +120,19 @@ class OrderService
      * @param $productId
      * @param $quantity
      */
-    public function createOrder($userId, $productId, $quantity)
+    public function createOrder($id, $userId, $productId, $quantity)
     {
         $userRepo = $this->em->getRepository(User::class);
         $productRepo = $this->em->getRepository(Product::class);
         $orderRepo = $this->em->getRepository(Order::class);
+
+        $order = null;
+        if (isset($id)) {
+            $order = $orderRepo->find($id);
+            if (!$order) {
+                throw  new BadRequestHttpException("Invalid order id");
+            }
+        }
 
         $user = $userRepo->find($userId);
         if (!$user) {
@@ -156,6 +164,6 @@ class OrderService
             }
         }
         // Create Order
-        $orderRepo->createOrder($user, $product, $quantity, $totalPrice);
+        $orderRepo->createOrder($order,$user, $product, $quantity, $totalPrice);
     }
 }

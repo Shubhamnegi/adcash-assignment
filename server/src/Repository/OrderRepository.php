@@ -153,6 +153,7 @@ class OrderRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $order
      * @param $user
      * @param $product
      * @param $quantity
@@ -160,13 +161,15 @@ class OrderRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function createOrder($user, $product, $quantity, $total)
+    public function createOrder($order, $user, $product, $quantity, $total)
     {
         $em = $this->getEntityManager(); // entity manager
 
         $current = new \DateTime(); // current time
+        if (!isset($order)) {
+            $order = new Order();
+        }
 
-        $order = new Order();
         $order->setCreatedAt($current);
         $order->setProduct($product);
         $order->setUser($user);
