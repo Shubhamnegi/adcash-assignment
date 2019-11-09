@@ -51,9 +51,11 @@ class OrderController
     {
         $getBy = $request->get('getby');
         $name = $request->get('name');
+        $limit = $request->get('limit');
+        $skip = $request->get('skip');
 
-        $order = $this->orderService->listOrdersByName($getBy, $name);
-        $count = $this->orderService->countOrderByName($getBy,$name);
+        $order = $this->orderService->listOrdersByName($getBy, $name, $limit, $skip);
+        $count = $this->orderService->countOrderByName($getBy, $name);
         $response = new CustomResponse(JsonHelper::toJson($order), "Result for " . $getBy, $count);
         return new JsonResponse($response, 200);
     }
