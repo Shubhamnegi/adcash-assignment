@@ -1,20 +1,20 @@
 product_list:
   path: /api/product/
   controller: App\Controller\ProductController::listProducts
-  methods: [GET]
+  methods: [GET,OPTIONS]
 
 user_list:
   path: /api/user/
   controller: App\Controller\UserController::listUsers
-  methods: [GET]
+  methods: [GET,OPTIONS]
 
 order_list:
   path: /api/order/
   controller: App\Controller\OrderController::listOrdersByName
-  methods: [GET]
+  methods: [GET,OPTIONS]
 
 order_create:
   path: /api/order/
   controller: App\Controller\OrderController::createOrder
-  methods: [POST]
+  methods: [POST,OPTIONS]
 
