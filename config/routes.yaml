@@ -10,7 +10,7 @@ user_list:
 
 order_list:
   path: /api/order/
-  controller: App\Controller\OrderController::listOrder
+  controller: App\Controller\OrderController::listOrdersByName
   methods: [GET]
 
 order_create:

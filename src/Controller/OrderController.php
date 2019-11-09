@@ -40,12 +40,12 @@ class OrderController
 
     }
 
-    public function listOrder(Request $request)
+    public function listOrdersByName(Request $request)
     {
         $getBy = $request->get('getby');
-        $id = $request->get('id');
+        $name = $request->get('name');
 
-        $order = $this->orderService->listOrders($getBy, $id);
+        $order = $this->orderService->listOrdersByName($getBy, $name);
         $response = new CustomResponse(JsonHelper::toJson($order), "Result for " . $getBy);
         return new JsonResponse($response, 200);
     }

@@ -28,7 +28,7 @@ class OrdersIntegrationTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request("GET", "/api/order/?getby=user&id=1", [], [], ["HTTP_CONTENT_TYPE" => "application/json"]);
+        $client->request("GET", "/api/order/?getby=user&name=Rimsha", [], [], ["HTTP_CONTENT_TYPE" => "application/json"]);
         $result = $client->getResponse()->getContent();
 
         $result = json_decode($result, true);
@@ -41,7 +41,7 @@ class OrdersIntegrationTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request("GET", "/api/order/?getby=product&id=1", [], [], ["HTTP_CONTENT_TYPE" => "application/json"]);
+        $client->request("GET", "/api/order/?getby=product&name=fanta", [], [], ["HTTP_CONTENT_TYPE" => "application/json"]);
         $result = $client->getResponse()->getContent();
 
         $result = json_decode($result, true);

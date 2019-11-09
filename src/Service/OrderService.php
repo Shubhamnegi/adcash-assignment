@@ -35,7 +35,7 @@ class OrderService
      * @param int $skip
      * @return Order[]
      */
-    public function listOrders($getBy, $id, $limit = 10, $skip = 0)
+    public function listOrdersById($getBy, $id, $limit = 10, $skip = 0)
     {
         // Validate request
         if (!isset($getBy) || !isset($id)) {
@@ -47,6 +47,32 @@ class OrderService
             $orders = $em->findOrderByUserId($id, $limit, $skip);
         } elseif ($getBy == "product") {
             $orders = $em->findOrderByProductId($id, $limit, $skip);
+        } else {
+            throw  new BadRequestHttpException("Invalid parameter");
+        }
+        return $orders;
+    }
+
+    /**
+     * @param $getBy string To get order by user or product
+     * @param $name
+     * @param int $limit
+     * @param int $skip
+     * @return Order[]
+     */
+    public function listOrdersByName($getBy, $name, $limit = 10, $skip = 0)
+    {
+        // Validate request
+        if (!isset($getBy) || !isset($name)) {
+            throw  new BadRequestHttpException("Missing parameters");
+        }
+
+
+        $em = $this->em->getRepository(Order::class);
+        if ($getBy == "user") {
+            $orders = $em->findOrderByUserName($name, $limit, $skip);
+        } elseif ($getBy == "product") {
+            $orders = $em->findOrdersByProductName($name, $limit, $skip);
         } else {
             throw  new BadRequestHttpException("Invalid parameter");
         }

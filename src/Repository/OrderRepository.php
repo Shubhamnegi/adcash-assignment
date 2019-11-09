@@ -36,7 +36,31 @@ class OrderRepository extends ServiceEntityRepository
             ->innerJoin("o.product", "p")
             ->andWhere('u.id = :userId')
             ->setParameter('userId', $userId)
-            ->orderBy('o.created_at', 'DESC')
+            ->orderBy('o.id', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult($skip)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $name
+     * @param $limit
+     * @param $skip
+     * @return mixed
+     */
+    public function findOrderByUserName($name, $limit, $skip)
+    {
+        return $this
+            ->createQueryBuilder('o')
+            ->select("o.id,o.quantity,o.total,o.created_at")
+            ->addSelect("u.name as user_name")
+            ->addSelect("p.name as product_name")
+            ->innerJoin("o.user", "u")
+            ->innerJoin("o.product", "p")
+            ->andWhere('u.name like :name')
+            ->setParameter('name', $name . "%")
+            ->orderBy('o.id', 'DESC')
             ->setMaxResults($limit)
             ->setFirstResult($skip)
             ->getQuery()
@@ -59,7 +83,31 @@ class OrderRepository extends ServiceEntityRepository
             ->innerJoin("o.product", "p")
             ->andWhere('p.id = :productId')
             ->setParameter('productId', $productId)
-            ->orderBy('o.created_at', 'DESC')
+            ->orderBy('o.id', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult($skip)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $name
+     * @param $limit
+     * @param $skip
+     * @return mixed
+     */
+    public function findOrdersByProductName($name, $limit, $skip)
+    {
+        return $this
+            ->createQueryBuilder('o')
+            ->select("o.id,o.quantity,o.total,o.created_at")
+            ->addSelect("u.name as user_name")
+            ->addSelect("p.name as product_name")
+            ->innerJoin("o.user", "u")
+            ->innerJoin("o.product", "p")
+            ->andWhere('p.name like :name')
+            ->setParameter('name', $name . "%")
+            ->orderBy('o.id', 'DESC')
             ->setMaxResults($limit)
             ->setFirstResult($skip)
             ->getQuery()
