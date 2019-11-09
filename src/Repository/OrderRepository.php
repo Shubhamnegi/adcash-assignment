@@ -29,7 +29,12 @@ class OrderRepository extends ServiceEntityRepository
     public function findOrderByUserId($userId, $limit, $skip)
     {
         return $this->createQueryBuilder('o')
-            ->andWhere('o.user_id = :userId')
+            ->select("o.id,o.quantity,o.total,o.created_at")
+            ->addSelect("u.name as user_name")
+            ->addSelect("p.name as product_name")
+            ->innerJoin("o.user", "u")
+            ->innerJoin("o.product", "p")
+            ->andWhere('u.id = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('o.created_at', 'DESC')
             ->setMaxResults($limit)
@@ -47,7 +52,12 @@ class OrderRepository extends ServiceEntityRepository
     public function findOrderByProductId($productId, $limit, $skip)
     {
         return $this->createQueryBuilder('o')
-            ->andWhere('o.product_id = :productId')
+            ->select("o.id,o.quantity,o.total,o.created_at")
+            ->addSelect("u.name as user_name")
+            ->addSelect("p.name as product_name")
+            ->innerJoin("o.user", "u")
+            ->innerJoin("o.product", "p")
+            ->andWhere('p.id = :productId')
             ->setParameter('productId', $productId)
             ->orderBy('o.created_at', 'DESC')
             ->setMaxResults($limit)
@@ -57,14 +67,14 @@ class OrderRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $userId
-     * @param $productId
+     * @param $user
+     * @param $product
      * @param $quantity
      * @param $total
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function createOrder($userId, $productId, $quantity, $total)
+    public function createOrder($user, $product, $quantity, $total)
     {
         $em = $this->getEntityManager(); // entity manager
 
@@ -72,8 +82,8 @@ class OrderRepository extends ServiceEntityRepository
 
         $order = new Order();
         $order->setCreatedAt($current);
-        $order->setProductId($productId);
-        $order->setUserId($userId);
+        $order->setProduct($product);
+        $order->setUser($user);
         $order->setQuantity($quantity);
         $order->setTotal($total);
 

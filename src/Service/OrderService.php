@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -59,8 +60,14 @@ class OrderService
      */
     public function createOrder($userId, $productId, $quantity)
     {
+        $userRepo = $this->em->getRepository(User::class);
         $productRepo = $this->em->getRepository(Product::class);
         $orderRepo = $this->em->getRepository(Order::class);
+
+        $user = $userRepo->find($userId);
+        if (!$user) {
+            throw  new BadRequestHttpException("Invalid user id");
+        }
         $product = $productRepo->find($productId); // Get Product by id
         if (!$product) {
             throw  new BadRequestHttpException("Invalid product id");
@@ -87,6 +94,6 @@ class OrderService
             }
         }
         // Create Order
-        $orderRepo->createOrder($userId, $productId, $quantity, $totalPrice);
+        $orderRepo->createOrder($user, $product, $quantity, $totalPrice);
     }
 }
