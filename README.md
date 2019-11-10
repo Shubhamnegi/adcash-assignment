@@ -4,13 +4,13 @@
   - Client
     - Angular 8 application
   - Server
-    - Symfony 4 Framework (Php 7.2)
+    - Symfony 4 Framework (Php 7.3)
 
 
 ## Setup To Test application
 
 ### Requirements
-  - php > 7.2
+  - php > 7.3
   - node > 10
   - @angular/cli
 
