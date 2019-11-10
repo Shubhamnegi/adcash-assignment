@@ -23,7 +23,7 @@
   - Terminal two: cd server && php bin/console server:run `This will start server at 8000`
   - Go to localhost:4200 and browser
 
-### Images
+### Images (Images folder has screenshots)
   - ![Screenshot 1](images/01.png)
   - ![Screenshot 2](images/02.png)
   - ![Screenshot 3](images/03.png)
