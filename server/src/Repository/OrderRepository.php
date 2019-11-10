@@ -49,20 +49,29 @@ class OrderRepository extends ServiceEntityRepository
      * @param $skip
      * @return mixed
      */
-    public function findOrderByUserName($name, $limit, $skip)
+    public function findOrderByUserName($name, $date, $limit, $skip)
     {
-        return $this
-            ->createQueryBuilder('o')
-            ->select("o.id,o.quantity,o.total,o.created_at")
-            ->addSelect("u.name as user_name")
-            ->addSelect("p.name as product_name")
-            ->innerJoin("o.user", "u")
-            ->innerJoin("o.product", "p")
-            ->andWhere('u.name like :name')
-            ->setParameter('name', $name . "%")
-            ->orderBy('o.id', 'DESC')
-            ->setMaxResults($limit)
-            ->setFirstResult($skip)
+        $query =
+            $this
+                ->createQueryBuilder('o')
+                ->select("o.id,o.quantity,o.total,o.created_at")
+                ->addSelect("u.name as user_name")
+                ->addSelect("p.name as product_name")
+                ->innerJoin("o.user", "u")
+                ->innerJoin("o.product", "p")
+                ->andWhere('u.name like :name')
+                ->setParameter('name', $name . "%")
+                ->orderBy('o.id', 'DESC')
+                ->setMaxResults($limit)
+                ->setFirstResult($skip);
+
+        // To Filter by date
+        if (isset($date) && !empty($date)) {
+            $query = $query
+                ->andWhere("o.created_at >= :duration")
+                ->setParameter("duration", $date);
+        }
+        return $query
             ->getQuery()
             ->getResult();
     }
@@ -71,16 +80,25 @@ class OrderRepository extends ServiceEntityRepository
      * @param $name
      * @return mixed
      */
-    public function countOrderByUserName($name)
+    public function countOrderByUserName($name, $date)
     {
-        $result = $this
-            ->createQueryBuilder('o')
-            ->select("count(o.id) as total")
-            ->innerJoin("o.user", "u")
-            ->innerJoin("o.product", "p")
-            ->andWhere('u.name like :name')
-            ->setParameter('name', $name . "%")
-            ->orderBy('o.id', 'DESC')
+        $query =
+            $this
+                ->createQueryBuilder('o')
+                ->select("count(o.id) as total")
+                ->innerJoin("o.user", "u")
+                ->innerJoin("o.product", "p")
+                ->andWhere('u.name like :name')
+                ->setParameter('name', $name . "%")
+                ->orderBy('o.id', 'DESC');
+
+        // To Filter by date
+        if (isset($date) && !empty($date)) {
+            $query
+                ->andWhere("o.created_at >= :date")
+                ->setParameter("date", $date);
+        }
+        $result = $query
             ->getQuery()
             ->getResult();
         return $result[0]['total'];
@@ -115,9 +133,9 @@ class OrderRepository extends ServiceEntityRepository
      * @param $skip
      * @return mixed
      */
-    public function findOrdersByProductName($name, $limit, $skip)
+    public function findOrdersByProductName($name, $date, $limit, $skip)
     {
-        return $this
+        $query = $this
             ->createQueryBuilder('o')
             ->select("o.id,o.quantity,o.total,o.created_at")
             ->addSelect("u.name as user_name")
@@ -128,27 +146,47 @@ class OrderRepository extends ServiceEntityRepository
             ->setParameter('name', $name . "%")
             ->orderBy('o.id', 'DESC')
             ->setMaxResults($limit)
-            ->setFirstResult($skip)
+            ->setFirstResult($skip);
+
+        // To Filter by date
+        if (isset($date) && !empty($date)) {
+            $query = $query
+                ->andWhere("o.created_at >= :duration")
+                ->setParameter("duration", $date);
+        }
+
+        return $query
             ->getQuery()
             ->getResult();
+
     }
 
     /**
      * @param $name
      * @return mixed
      */
-    public function countOrderByProductName($name)
+    public function countOrderByProductName($name, $date)
     {
-        $result = $this
+        $query = $this
             ->createQueryBuilder('o')
             ->select("count(o.id) as total")
             ->innerJoin("o.user", "u")
             ->innerJoin("o.product", "p")
             ->andWhere('p.name like :name')
             ->setParameter('name', $name . "%")
-            ->orderBy('o.id', 'DESC')
+            ->orderBy('o.id', 'DESC');
+
+        // To Filter by date
+        if (isset($date) && !empty($date)) {
+            $query = $query
+                ->andWhere("o.created_at >= :duration")
+                ->setParameter("duration", $date);
+        }
+
+        $result = $query
             ->getQuery()
             ->getResult();
+
         return $result[0]['total'];
     }
 

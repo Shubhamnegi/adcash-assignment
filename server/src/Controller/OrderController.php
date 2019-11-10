@@ -42,21 +42,27 @@ class OrderController
         $productId = $request->request->get("productId");
         $quantity = $request->request->get("quantity");
 
-        $this->orderService->createOrder($id,$userId, $productId, $quantity);
+        $this->orderService->createOrder($id, $userId, $productId, $quantity);
         $response = new CustomResponse(true);
         return new JsonResponse($response);
 
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Exception
+     */
     public function listOrdersByName(Request $request)
     {
-        $getBy = $request->get('getby');
-        $name = $request->get('name');
-        $limit = $request->get('limit');
-        $skip = $request->get('skip');
+        $duration = $request->get('duration', 1);
+        $getBy = $request->get('getby', "user");
+        $name = $request->get('name', "");
+        $limit = $request->get('limit', 10);
+        $skip = $request->get('skip', 0);
 
-        $order = $this->orderService->listOrdersByName($getBy, $name, $limit, $skip);
-        $count = $this->orderService->countOrderByName($getBy, $name);
+        $order = $this->orderService->listOrdersByName($getBy, $name, $duration, $limit, $skip);
+        $count = $this->orderService->countOrderByName($getBy, $name, $duration);
         $response = new CustomResponse(JsonHelper::toJson($order), "Result for " . $getBy, $count);
         return new JsonResponse($response, 200);
     }

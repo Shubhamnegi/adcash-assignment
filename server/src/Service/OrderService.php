@@ -71,42 +71,72 @@ class OrderService
     }
 
     /**
+     * @param $duration
+     * @return \DateTime
+     * @throws \Exception
+     */
+    private function getPreviousDate($duration)
+    {
+        $currentDate = new \DateTime();
+        $currentDate->setTime(0, 0, 0, 0);
+        if ($duration < 0) {
+            $previousDay = null;
+        } else {
+            $previousDay = $currentDate->sub(new \DateInterval('P' . $duration . 'D'));
+        }
+        return $previousDay;
+
+    }
+
+    /**
      * @param $getBy string To get order by user or product
      * @param $name
+     * @param $duration
      * @param int $limit
      * @param int $skip
      * @return Order[]
+     * @throws
      */
-    public function listOrdersByName($getBy, $name, $limit = 10, $skip = 0)
+    public function listOrdersByName($getBy, $name, $duration, $limit = 10, $skip = 0)
     {
         // Validate request
-        if (!isset($getBy) || !isset($name)) {
+        if (!isset($getBy) || !isset($name) || !isset($duration)) {
             throw  new BadRequestHttpException("Missing parameters");
         }
 
+        $previousDay = $this->getPreviousDate($duration);
 
         $em = $this->em->getRepository(Order::class);
         if ($getBy == "user") {
-            $orders = $em->findOrderByUserName($name, $limit, $skip);
+            $orders = $em->findOrderByUserName($name, $previousDay, $limit, $skip);
         } elseif ($getBy == "product") {
-            $orders = $em->findOrdersByProductName($name, $limit, $skip);
+            $orders = $em->findOrdersByProductName($name, $previousDay, $limit, $skip);
         } else {
             throw  new BadRequestHttpException("Invalid parameter");
         }
         return $orders;
     }
 
-    public function countOrderByName($getBy, $name = "")
+    /**
+     * @param $getBy
+     * @param string $name
+     * @param $duration
+     * @return mixed
+     * @throws \Exception
+     */
+    public function countOrderByName($getBy, $name, $duration)
     {
         if (!isset($name)) {
             throw  new BadRequestHttpException("missing parameter name");
         }
         $em = $this->em->getRepository(Order::class);
 
+        $previousDay = $this->getPreviousDate($duration);
+
         if ($getBy == "user") {
-            $result = $em->countOrderByUserName($name);
+            $result = $em->countOrderByUserName($name, $previousDay);
         } elseif ($getBy == "product") {
-            $result = $em->countOrderByProductName($name);
+            $result = $em->countOrderByProductName($name, $previousDay);
         } else {
             throw  new BadRequestHttpException("Invalid parameter");
         }
@@ -164,6 +194,6 @@ class OrderService
             }
         }
         // Create Order
-        $orderRepo->createOrder($order,$user, $product, $quantity, $totalPrice);
+        $orderRepo->createOrder($order, $user, $product, $quantity, $totalPrice);
     }
 }
