@@ -25,13 +25,13 @@
 
 ### Images
   - ![Screenshot 1](images/01.png)
-  - ![Screenshot 2](./images/02.png)
-  - ![Screenshot 3](./images/03.png)
-  - ![Screenshot 4](./images/04.png)
-  - ![Screenshot 5](./images/05.png)
-  - ![Screenshot 6](./images/06.png)
-  - ![Screenshot 7](./images/07.png)
-  - ![Screenshot 8](./images/08.png)
-  - ![Screenshot 9](./images/09.png)    
+  - ![Screenshot 2](images/02.png)
+  - ![Screenshot 3](images/03.png)
+  - ![Screenshot 4](images/04.png)
+  - ![Screenshot 5](images/05.png)
+  - ![Screenshot 6](images/06.png)
+  - ![Screenshot 7](images/07.png)
+  - ![Screenshot 8](images/08.png)
+  - ![Screenshot 9](images/09.png)    
 
   
