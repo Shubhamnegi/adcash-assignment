@@ -24,11 +24,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
 
-  durationList = [{ key: 1, value: 'Today' }, { key: 7, value: '7 days' }, { key: 0, value: 'All days' }];
+  durationList = [{ key: 0, value: 'Today' }, { key: 7, value: '7 days' }, { key: -1, value: 'All days' }];
   listTypes = [{ key: 'user', value: 'User' }, { key: 'product', value: 'Product' }];
 
   currentSearchOptions = {
-    duration: 1,
+    duration: 0,
     getby: 'user',
     name: ''
   };
@@ -109,7 +109,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   listOrders() {
-    this.orderService.listOrders(this.currentSearchOptions.getby, this.currentSearchOptions.name, this.limit, this.skip)
+    this.orderService.listOrders(
+      this.currentSearchOptions.getby,
+      this.currentSearchOptions.name,
+      this.currentSearchOptions.duration,
+      this.limit,
+      this.skip)
       .then((data: CustomResponse<OrderInterface[]>) => {
         console.log(data.body, 'response');
         this.datasource.data = data.body;
